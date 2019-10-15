@@ -6,11 +6,15 @@ The source code of the Bazel Tools for Java is currently checked in the [bazel
 repository](https://github.com/bazelbuild/bazel). The source code will be moved 
 incrementally to this repository.
 
-# Upgrade Bazel project to use new java_tools version
+# Upgrade a Bazel project to use custom java_tools version
 
-To upgrade Bazel project to use new java_tools releasem before new releases
-was pinned in new Bazel version and this version was released, add these lines
-to `WORKSPACE` file:
+To use a specific java_tools release in your Bazel project please add the `http_archive`
+definitions in your WORKSPACE file and set the options `--java_toolchain` and/or
+`--host_java_toolchain` accordingly. All java_tools releases can be found under
+https://github.com/bazelbuild/java_tools/releases.
+
+For example to use java_tools_javac11-v6.0 you can add the following to the WORKSPACE
+file:
 
 ```
 http_archive(
@@ -37,6 +41,13 @@ http_archive(
         "https://github.com/bazelbuild/java_tools/releases/download/javac11-v6.0/java_tools_javac11_darwin-v6.0.zip",
     ],
 )
+```
+
+and set the command line options according to the OS:
+
+```
+  --java_toolchain=@remote_java_tools_linux//:toolchain \
+  --host_java_toolchain=@remote_java_tools_linux//:toolchain
 ```
 
 # Releases
