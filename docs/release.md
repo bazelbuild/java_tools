@@ -40,6 +40,10 @@ with the new release candidates. See
 [#8302](https://github.com/bazelbuild/bazel/pull/8302) as an example.
 The PR triggers the CI presubmit.
 
+
+6. Trigger a new build on Downstream https://buildkite.com/bazel/bazel-at-head-plus-downstream.
+   Using `pulls/PRNUMBER/head` for the branch.
+
     1. If the CI finishes successfully:
         - create the release artifacts from the
         release candidate:
