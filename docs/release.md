@@ -18,7 +18,6 @@ an example.
 3. Identify and set the following environment variables:
 
   * `COMMIT_HASH` the commit hash where the pipeline was run (see below)
-  * `JDK_VERSION` the JDK version for which you want to release `java_tools`
   * `NEW_VERSION` the new version number you’re trying to release (e.g. `3.1`)
   * `RC` the number of the current release candidate
 
@@ -28,7 +27,6 @@ an example.
     src/create_java_tools_release.sh \
     --commit_hash $COMMIT_HASH \
     --java_tools_version $NEW_VERSION \
-    --java_version $JDK_VERSION \
     --rc $RC --release false
     ```
 
@@ -42,7 +40,7 @@ The PR triggers the CI presubmit.
 
 
 6. Trigger a new build on Downstream https://buildkite.com/bazel/bazel-at-head-plus-downstream.
-   Using `pulls/PRNUMBER/head` for the branch.
+   Using `pull/PRNUMBER/head` for the branch.
 
     1. If the CI finishes successfully:
         - create the release artifacts from the
@@ -50,7 +48,6 @@ The PR triggers the CI presubmit.
         ```
         src/create_java_tools_release.sh \
         --java_tools_version $NEW_VERSION \
-        --java_version $JDK_VERSION \
         --rc $RC --release true
         ```
         - update the urls of the `http_archive`s in the upgrade PR and send it for
