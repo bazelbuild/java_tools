@@ -33,9 +33,9 @@ an example.
     The script will output the sha256sum of the rc artifacts for linux, darwin
     and windows.
 
-5. Create a new bazel Pull Request that updates the `java_tools` `html_archive`s
-with the new release candidates. See
-[#8302](https://github.com/bazelbuild/bazel/pull/8302) as an example.
+5. Create a new bazel Pull Request that updates the `java_tools` archives (file 
+[distdir_deps.bzl](https://github.com/bazelbuild/bazel/blob/master/distdir_deps.bzl))
+with the new release candidates.
 The PR triggers the CI presubmit.
 
 
