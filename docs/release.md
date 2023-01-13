@@ -64,22 +64,42 @@ an example.
      ```
      
   * Repeat for `remote_java_tools_linux`, `remote_java_tools_windows`, and `remote_java_tools_darwin`
-  * See [#16865](https://github.com/bazelbuild/bazel/pull/16865) for reference
+  * See [#16865](https://github.com/bazelbuild/bazel/pull/16865) for reference ([this](https://github.com/bazelbuild/bazel/pull/16865/commits/5e1a96221828b91eef634a2087e63d056fb2b146) commit)
 
-6. Trigger a new build on Downstream https://buildkite.com/bazel/bazel-at-head-plus-downstream.
-   Using `pull/PRNUMBER/head` for the branch.
+6. Trigger a new build on Downstream https://buildkite.com/bazel/bazel-at-head-plus-downstream. Set the message field to "java_tools release [version] [rc]", leave the commit field as "HEAD", and use `pull/[PRNUMBER]/head` for the branch. See [example](https://buildkite.com/bazel/bazel-at-head-plus-downstream/builds/2818). 
 
     1. If the CI finishes successfully:
-        - create the release artifacts from the
-        release candidate:
-        ```
-        src/create_java_tools_release.sh \
-        --java_tools_version $NEW_VERSION \
-        --rc $RC --release true
-        ```
-        - update the urls of the `http_archive`s in the upgrade PR and send it for
-        review.
+        - create the release artifacts from the release candidate:
+          ```
+          src/create_java_tools_release.sh \
+          --java_tools_version $NEW_VERSION \
+          --rc $RC --release true
+          ```
+          The script will output the sha256sum of the rc artifacts for linux, darwin and windows.
+
+          Sample output:
+          ```
+          $ src/create_java_tools_release.sh --commit_hash 7bd0ab63a8441c3f3d7f495d09ed2bed38762874 --java_tools_version 11.9 --rc 1 --release true
+
+            releases/java/v11.9/java_tools_linux-v11.9.zip 512582cac5b7ea7974a77b0da4581b21f546c9478f206eedf54687eeac035989
+            releases/java/v11.9/java_tools_windows-v11.9.zip 677ab910046205020fd715489147c2bcfad8a35d9f5d94fdc998d217545bd87a
+            releases/java/v11.9/java_tools_darwin-v11.9.zip b9e962c6a836ba1d7573f2473fab3a897c6370d4c2724bde4017b40932ff4fe4
+            releases/java/v11.9/java_tools-v11.9.zip 5cd59ea6bf938a1efc1e11ea562d37b39c82f76781211b7cd941a2346ea8484d
+          ```
+
+        - Return to your PR and update the update the `archive`, `sha256`, and `urls` fields again (see step 5 above for reference). See [#16865](https://github.com/bazelbuild/bazel/pull/16865) ([this](https://github.com/bazelbuild/bazel/pull/16865/commits/863b71d654dfefa52f81ed986a83766e3aade2d4) commit).
+
+           Example:
+           ```
+           "archive": "java_tools-v11.9.zip",
+           "sha256": "5cd59ea6bf938a1efc1e11ea562d37b39c82f76781211b7cd941a2346ea8484d",
+           "urls": [
+              "https://mirror.bazel.build/bazel_java_tools/releases/java/v11.9/java_tools-v11.9.zip",
+              "https://github.com/bazelbuild/java_tools/releases/download/java_v11.9/java_tools-v11.9.zip",
+           ],
+           ```
+        - Send the PR for review and assign `@comius` and `@hvadehra`
     2. If the CI finishes unsuccessfully find the reasons why the CI is failing
-    and file bugs. After the bugs are fixed start all over again creating the
+    and file bugs. After the bugs are fixed start all over again from step 2 and create the
     next release candidate. This case is highly unlikely because bazel already
     tests the `java_tools` built at head.
