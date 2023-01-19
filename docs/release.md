@@ -98,7 +98,59 @@ an example.
               "https://github.com/bazelbuild/java_tools/releases/download/java_v11.9/java_tools-v11.9.zip",
            ],
            ```
-        - Send the PR for review and assign `@comius` and `@hvadehra`
+        - Update the release in the java_tools [releases page](https://github.com/bazelbuild/java_tools/releases)
+            -   Create on "Draft a new release"
+                -   Set tag to java_v[version number], e.g. java_v11.09
+                -   Set target to master
+                -   Add the name, sha256, and urls to the description
+
+                Example:
+                ```
+                To use this java_tools release, add to your WORKSPACE file the definitions:
+
+                http_archive(
+                    name = "remote_java_tools",
+                    sha256 = "5cd59ea6bf938a1efc1e11ea562d37b39c82f76781211b7cd941a2346ea8484d",
+                    urls = [
+                            "https://mirror.bazel.build/bazel_java_tools/releases/java/v11.9/java_tools-v11.9.zip",
+                            "https://github.com/bazelbuild/java_tools/releases/download/java_v11.9/java_tools-v11.9.zip",
+                    ],
+                )
+
+                http_archive(
+                    name = "remote_java_tools_linux",
+                    sha256 = "512582cac5b7ea7974a77b0da4581b21f546c9478f206eedf54687eeac035989",
+                    urls = [
+                            "https://mirror.bazel.build/bazel_java_tools/releases/java/v11.9/java_tools_linux-v11.9.zip",
+                            "https://github.com/bazelbuild/java_tools/releases/download/java_v11.9/java_tools_linux-v11.9.zip",
+                    ],
+                )
+
+                http_archive(
+                    name = "remote_java_tools_windows",
+                    sha256 = "677ab910046205020fd715489147c2bcfad8a35d9f5d94fdc998d217545bd87a",
+                    urls = [
+                            "https://mirror.bazel.build/bazel_java_tools/releases/java/v11.9/java_tools_windows-v11.9.zip",
+                            "https://github.com/bazelbuild/java_tools/releases/download/java_v11.9/java_tools_windows-v11.9.zip",    
+                    ],
+                )
+
+                http_archive(
+                    name = "remote_java_tools_darwin",
+                    sha256 = "b9e962c6a836ba1d7573f2473fab3a897c6370d4c2724bde4017b40932ff4fe4",
+                    urls = [
+                            "https://mirror.bazel.build/bazel_java_tools/releases/java/v11.9/java_tools_darwin-v11.9.zip",
+                            "https://github.com/bazelbuild/java_tools/releases/download/java_v11.9/java_tools_darwin-v11.9.zip",
+                    ],
+                )
+                ```
+                
+                -   Download the 4 .zip files from mirror.bazel.build/bazel_java_tools/releases
+                -   Set as the latest release
+                -   Refer to [this example](https://github.com/bazelbuild/java_tools/releases/tag/java_v11.9)
+
+        - Update package_version, see [example](https://github.com/bazelbuild/bazel/pull/17203/commits/308ed35f45e82163a84313ef67610a32198f6555)
+        - After making sure presubmits pass, send the PR for review and assign `@comius` and `@hvadehra`
     2. If the CI finishes unsuccessfully find the reasons why the CI is failing
     and file bugs. After the bugs are fixed start all over again from step 2 and create the
     next release candidate. This case is highly unlikely because bazel already
