@@ -145,7 +145,7 @@ an example.
                 )
                 ```
                 
-                -   Download the 4 .zip files from mirror.bazel.build/bazel_java_tools/releases
+                -   Download the 4 .zip files from mirror.bazel.build/bazel_java_tools/releases and attach them to the release
                 -   Set as the latest release
                 -   Refer to [this example](https://github.com/bazelbuild/java_tools/releases/tag/java_v11.9)
 
