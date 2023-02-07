@@ -22,15 +22,15 @@ an example.
   * `RC` the number of the current release candidate
 
      For example:
-     ```
-     EXPORT COMMIT_HASH=7bd0ab63a8441c3f3d7f495d09ed2bed38762874
-     EXPORT NEW_VERSION=11.09
-     EXPORT RC=1
+     ```bash
+     export COMMIT_HASH=7bd0ab63a8441c3f3d7f495d09ed2bed38762874
+     export NEW_VERSION=11.09
+     export RC=1
      ```
 
 4. Create a new release candidate by running the command below from the [bazel](https://github.com/bazelbuild/bazel) repo:
 
-    ```
+    ```bash
     src/create_java_tools_release.sh \
     --commit_hash $COMMIT_HASH \
     --java_tools_version $NEW_VERSION \
@@ -41,7 +41,7 @@ an example.
     and windows.
     
     Sample output:
-    ```
+    ```bash
     $ src/create_java_tools_release.sh --commit_hash 7bd0ab63a8441c3f3d7f495d09ed2bed38762874 --java_tools_version 11.9 --rc 1 --release false
 
       release_candidates/java/v11.9/java_tools_linux-v11.9-rc1.zip 512582cac5b7ea7974a77b0da4581b21f546c9478f206eedf54687eeac035989
@@ -55,7 +55,7 @@ an example.
   * Edit [distdir_deps.bzl](https://github.com/bazelbuild/bazel/blob/master/distdir_deps.bzl) by updating the `archive`, `sha256`, and `urls` fields for `remote_java_tools` with the correct version, rc, sha256sum, and url (see output from step 4)
   
      Example:
-     ```
+     ```starlark
      "archive": "java_tools-v11.9-rc1.zip",
      "sha256": "5cd59ea6bf938a1efc1e11ea562d37b39c82f76781211b7cd941a2346ea8484d",
      "urls": [
@@ -70,7 +70,7 @@ an example.
 
     1. If the CI finishes successfully:
         - create the release artifacts from the release candidate:
-          ```
+          ```bash
           src/create_java_tools_release.sh \
           --java_tools_version $NEW_VERSION \
           --rc $RC --release true
@@ -78,7 +78,7 @@ an example.
           The script will output the sha256sum of the rc artifacts for linux, darwin and windows.
 
           Sample output:
-          ```
+          ```bash
           $ src/create_java_tools_release.sh --commit_hash 7bd0ab63a8441c3f3d7f495d09ed2bed38762874 --java_tools_version 11.9 --rc 1 --release true
 
             releases/java/v11.9/java_tools_linux-v11.9.zip 512582cac5b7ea7974a77b0da4581b21f546c9478f206eedf54687eeac035989
@@ -90,7 +90,7 @@ an example.
         - Return to your PR and update the update the `archive`, `sha256`, and `urls` fields again (see step 5 above for reference). See [#16865](https://github.com/bazelbuild/bazel/pull/16865) ([this](https://github.com/bazelbuild/bazel/pull/16865/commits/863b71d654dfefa52f81ed986a83766e3aade2d4) commit).
 
            Example:
-           ```
+           ```starlark
            "archive": "java_tools-v11.9.zip",
            "sha256": "5cd59ea6bf938a1efc1e11ea562d37b39c82f76781211b7cd941a2346ea8484d",
            "urls": [
