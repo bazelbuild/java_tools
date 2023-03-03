@@ -151,7 +151,13 @@ an example.
 
         - Update package_version, see [example](https://github.com/bazelbuild/bazel/pull/17203/commits/308ed35f45e82163a84313ef67610a32198f6555)
         - After making sure presubmits pass, send the PR for review and assign `@comius` and `@hvadehra`
-    2. If the CI finishes unsuccessfully find the reasons why the CI is failing
+    2. Update the version of the java_tools here in rules_java repository:
+    https://github.com/bazelbuild/rules_java/blob/master/java/repositories.bzl#L22-L61. 
+    After making the changes, submit the PR and it will add `@comius` and `@java team` as a reviewer.
+    Refer to [this example] (https://github.com/bazelbuild/rules_java/pull/87)
+    
+    3. If the CI finishes unsuccessfully find the reasons why the CI is failing
     and file bugs. After the bugs are fixed start all over again from step 2 and create the
     next release candidate. This case is highly unlikely because bazel already
     tests the `java_tools` built at head.
+ 
