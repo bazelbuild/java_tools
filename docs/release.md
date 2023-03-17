@@ -46,7 +46,8 @@ an example.
 
       release_candidates/java/v11.9/java_tools_linux-v11.9-rc1.zip 512582cac5b7ea7974a77b0da4581b21f546c9478f206eedf54687eeac035989
       release_candidates/java/v11.9/java_tools_windows-v11.9-rc1.zip 677ab910046205020fd715489147c2bcfad8a35d9f5d94fdc998d217545bd87a
-      release_candidates/java/v11.9/java_tools_darwin-v11.9-rc1.zip b9e962c6a836ba1d7573f2473fab3a897c6370d4c2724bde4017b40932ff4fe4
+      release_candidates/java/v11.9/java_tools_darwin_x86_64-v11.9-rc1.zip b9e962c6a836ba1d7573f2473fab3a897c6370d4c2724bde4017b40932ff4fe4
+      release_candidates/java/v11.9/java_tools_darwin_arm64-v11.9-rc1.zip 3a897c6370d4c2724bde4017b40932ff4fe4b9e962c6a836ba1d7573f2473fab
       release_candidates/java/v11.9/java_tools-v11.9-rc1.zip 5cd59ea6bf938a1efc1e11ea562d37b39c82f76781211b7cd941a2346ea8484d
     ```
 
@@ -63,8 +64,8 @@ an example.
      ],
      ```
      
-  * Repeat for `remote_java_tools_linux`, `remote_java_tools_windows`, and `remote_java_tools_darwin`
-  * See [#16865](https://github.com/bazelbuild/bazel/pull/16865) for reference ([this](https://github.com/bazelbuild/bazel/pull/16865/commits/5e1a96221828b91eef634a2087e63d056fb2b146) commit)
+  * Repeat for `remote_java_tools_linux`, `remote_java_tools_windows`, `remote_java_tools_darwin_x86_64` and `remote_java_tools_darwin_arm64`
+  * See [#16865](https://github.com/bazelbuild/bazel/pull/17802) for reference ([this](https://github.com/bazelbuild/bazel/pull/17802/commits/8678754e0b1c19269f4974d80ef66e8aeb7d4fb3) commit)
 
 6. Trigger a new build on Downstream https://buildkite.com/bazel/bazel-at-head-plus-downstream. Set the message field to "java_tools release [version] [rc]", leave the commit field as "HEAD", and use `pull/[PRNUMBER]/head` for the branch. See [example](https://buildkite.com/bazel/bazel-at-head-plus-downstream/builds/2818). 
 
@@ -83,11 +84,12 @@ an example.
 
             releases/java/v11.9/java_tools_linux-v11.9.zip 512582cac5b7ea7974a77b0da4581b21f546c9478f206eedf54687eeac035989
             releases/java/v11.9/java_tools_windows-v11.9.zip 677ab910046205020fd715489147c2bcfad8a35d9f5d94fdc998d217545bd87a
-            releases/java/v11.9/java_tools_darwin-v11.9.zip b9e962c6a836ba1d7573f2473fab3a897c6370d4c2724bde4017b40932ff4fe4
+            releases/java/v11.9/java_tools_darwin_x86_64-v11.9.zip b9e962c6a836ba1d7573f2473fab3a897c6370d4c2724bde4017b40932ff4fe4
+            releases/java/v11.9/java_tools_darwin_arm64-v11.9.zip 3a897c6370d4c2724bde4017b40932ff4fe4b9e962c6a836ba1d7573f2473fab
             releases/java/v11.9/java_tools-v11.9.zip 5cd59ea6bf938a1efc1e11ea562d37b39c82f76781211b7cd941a2346ea8484d
           ```
 
-        - Return to your PR and update the update the `archive`, `sha256`, and `urls` fields again (see step 5 above for reference). See [#16865](https://github.com/bazelbuild/bazel/pull/16865) ([this](https://github.com/bazelbuild/bazel/pull/16865/commits/863b71d654dfefa52f81ed986a83766e3aade2d4) commit).
+        - Return to your PR and update the update the `archive`, `sha256`, and `urls` fields again (see step 5 above for reference). See [#16865](https://github.com/bazelbuild/bazel/pull/17802) ([this](https://github.com/bazelbuild/bazel/pull/17802/commits/67283b90fb69bd011531221ecebb70a863502dbc) commit).
 
            Example:
            ```starlark
@@ -136,11 +138,20 @@ an example.
                 )
 
                 http_archive(
-                    name = "remote_java_tools_darwin",
+                    name = "remote_java_tools_darwin_x86_64",
                     sha256 = "b9e962c6a836ba1d7573f2473fab3a897c6370d4c2724bde4017b40932ff4fe4",
                     urls = [
-                            "https://mirror.bazel.build/bazel_java_tools/releases/java/v11.9/java_tools_darwin-v11.9.zip",
-                            "https://github.com/bazelbuild/java_tools/releases/download/java_v11.9/java_tools_darwin-v11.9.zip",
+                            "https://mirror.bazel.build/bazel_java_tools/releases/java/v11.9/java_tools_darwin_x86_64-v11.9.zip",
+                            "https://github.com/bazelbuild/java_tools/releases/download/java_v11.9/java_tools_darwin_x86_64-v11.9.zip",
+                    ],
+                )
+
+                http_archive(
+                    name = "remote_java_tools_darwin_arm64",
+                    sha256 = "3a897c6370d4c2724bde4017b40932ff4fe4b9e962c6a836ba1d7573f2473fab",
+                    urls = [
+                            "https://mirror.bazel.build/bazel_java_tools/releases/java/v11.9/java_tools_darwin_arm64-v11.9.zip",
+                            "https://github.com/bazelbuild/java_tools/releases/download/java_v11.9/java_tools_darwin_arm64-v11.9.zip",
                     ],
                 )
                 ```
