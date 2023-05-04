@@ -67,10 +67,11 @@ an example.
   * Repeat for `remote_java_tools_linux`, `remote_java_tools_windows`, `remote_java_tools_darwin_x86_64` and `remote_java_tools_darwin_arm64`
   * See [#16865](https://github.com/bazelbuild/bazel/pull/18314) for reference ([this](https://github.com/bazelbuild/bazel/pull/18314/commits/eb268e1d909ff767ada37386c01cc3fc88e60bb2) commit)
 
-6. Trigger a new build on Downstream https://buildkite.com/bazel/bazel-at-head-plus-downstream. Set the message field to "java_tools release [version] [rc]", leave the commit field as "HEAD", and use `pull/[PRNUMBER]/head` for the branch. See [example](https://buildkite.com/bazel/bazel-at-head-plus-downstream/builds/2818). 
+6. Trigger a new build on Downstream https://buildkite.com/bazel/bazel-at-head-plus-downstream. Set the message field to "java_tools release [version] [rc]", leave the commit field as "HEAD", and use `pull/[PRNUMBER]/head` for the branch. See [example](https://buildkite.com/bazel/bazel-at-head-plus-downstream/builds/2818).
 
-    1. If the CI finishes successfully:
-        - create the release artifacts from the release candidate:
+    1. Check the results of the build to confirm that there are no new failures (i.e. all failures also appear at HEAD). To do this, compare the results to the latest run [here](https://buildkite.com/bazel/bazel-at-head-plus-downstream/builds?branch=master).
+    2. If the CI finishes successfully:
+        - Create the release artifacts from the release candidate:
           ```bash
           src/create_java_tools_release.sh \
           --java_tools_version $NEW_VERSION \
@@ -160,12 +161,9 @@ an example.
                 -   Set as the latest release
                 -   Refer to [this example](https://github.com/bazelbuild/java_tools/releases/tag/java_v11.9)
 
-        - Update package_version, see [example](https://github.com/bazelbuild/bazel/pull/17203/commits/308ed35f45e82163a84313ef67610a32198f6555)
+        - Update the `package_version`, see [example](https://github.com/bazelbuild/bazel/pull/17203/commits/308ed35f45e82163a84313ef67610a32198f6555)
         - After making sure presubmits pass, send the PR for review and assign `@comius` and `@hvadehra`
         - Make the corresponding updates to [java_tools_repos()](https://github.com/bazelbuild/rules_java/blob/master/java/repositories.bzl#L22-L61) in the repositories.bzl file in the rules_java repository. Refer to [this example](https://github.com/bazelbuild/rules_java/pull/87).
     
-    3. If the CI finishes unsuccessfully find the reasons why the CI is failing
-    and file bugs. After the bugs are fixed start all over again from step 2 and create the
-    next release candidate. This case is highly unlikely because bazel already
-    tests the `java_tools` built at head.
+    3. If the CI finishes unsuccessfully find the reasons why the CI is failing and file bugs. After the bugs are fixed start all over again from step 2 and create the next release candidate. This case is highly unlikely because Bazel already tests the `java_tools` built at head.
  
