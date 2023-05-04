@@ -14,7 +14,7 @@ more details about how the process works, see
 1. Create a new tracking issue for the release in this repository and add the
 `release` label. See [#59](https://github.com/bazelbuild/java_tools/issues/59) as
 an example.
-2. Trigger a new build of the [`java_tools binaries pipeline`](https://buildkite.com/bazel-trusted/java-tools-binaries-java). Set the message field to "java_tools release [version] [rc]". See [example](https://buildkite.com/bazel-trusted/java-tools-binaries-java/builds/189).
+2. Trigger a new build of the [`java_tools binaries pipeline`](https://buildkite.com/bazel-trusted/java-tools-binaries-java). Set the message field to "java_tools release [version] [rc]", and leave the commit field as "HEAD" and branch as "master". See [example](https://buildkite.com/bazel-trusted/java-tools-binaries-java/builds/189).
 3. Identify and set the following environment variables:
 
   * `COMMIT_HASH` the commit hash where the pipeline was run (see below)
@@ -51,7 +51,7 @@ an example.
       release_candidates/java/v11.9/java_tools-v11.9-rc1.zip 5cd59ea6bf938a1efc1e11ea562d37b39c82f76781211b7cd941a2346ea8484d
     ```
 
-5. Create a new bazel Pull Request that updates the `java_tools` archives (file [distdir_deps.bzl](https://github.com/bazelbuild/bazel/blob/master/distdir_deps.bzl)) with the new release candidates. The PR triggers the CI presubmit.  
+5. Create a new Bazel pull request that updates the `java_tools` archives (file [distdir_deps.bzl](https://github.com/bazelbuild/bazel/blob/master/distdir_deps.bzl)) with the new release candidates. The PR triggers the CI presubmit.  
 
   * Edit [distdir_deps.bzl](https://github.com/bazelbuild/bazel/blob/master/distdir_deps.bzl) by updating the `archive`, `sha256`, and `urls` fields for `remote_java_tools` with the correct version, rc, sha256sum, and url (see output from step 4)
   
@@ -65,7 +65,7 @@ an example.
      ```
      
   * Repeat for `remote_java_tools_linux`, `remote_java_tools_windows`, `remote_java_tools_darwin_x86_64` and `remote_java_tools_darwin_arm64`
-  * See [#16865](https://github.com/bazelbuild/bazel/pull/17802) for reference ([this](https://github.com/bazelbuild/bazel/pull/17802/commits/8678754e0b1c19269f4974d80ef66e8aeb7d4fb3) commit)
+  * See [#16865](https://github.com/bazelbuild/bazel/pull/18314) for reference ([this](https://github.com/bazelbuild/bazel/pull/18314/commits/eb268e1d909ff767ada37386c01cc3fc88e60bb2) commit)
 
 6. Trigger a new build on Downstream https://buildkite.com/bazel/bazel-at-head-plus-downstream. Set the message field to "java_tools release [version] [rc]", leave the commit field as "HEAD", and use `pull/[PRNUMBER]/head` for the branch. See [example](https://buildkite.com/bazel/bazel-at-head-plus-downstream/builds/2818). 
 
@@ -101,7 +101,7 @@ an example.
            ],
            ```
         - Update the release in the java_tools [releases page](https://github.com/bazelbuild/java_tools/releases)
-            -   Create on "Draft a new release"
+            -   Click on "Draft a new release"
                 -   Set tag to java_v[version number], e.g. java_v11.09
                 -   Set target to master
                 -   Add the name, sha256, and urls to the description
@@ -156,7 +156,7 @@ an example.
                 )
                 ```
                 
-                -   Download the 4 .zip files from mirror.bazel.build/bazel_java_tools/releases and attach them to the release
+                -   Download the 5 .zip files from the updated https://mirror.bazel.build URLs above and attach them to the release
                 -   Set as the latest release
                 -   Refer to [this example](https://github.com/bazelbuild/java_tools/releases/tag/java_v11.9)
 
