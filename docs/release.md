@@ -68,7 +68,20 @@ more details about how the process works, see
      
   * Repeat for `remote_java_tools_linux`, `remote_java_tools_windows`, `remote_java_tools_darwin_x86_64` and `remote_java_tools_darwin_arm64`    
 
-6. Edit [distdir_deps.bzl](https://github.com/bazelbuild/bazel/blob/master/distdir_deps.bzl#L65) in the Bazel repository by updating the `archive`, `sha256`, and `urls` fields with the updates made to the new branch (step 5). Create a new pull request - **example PR coming soon**. The PR triggers the CI presubmit.
+6. Edit [distdir_deps.bzl](https://github.com/bazelbuild/bazel/blob/master/distdir_deps.bzl#L65) in the Bazel repository and create a new pull request. This PR will trigger the CI presubmit.
+
+  * Get the commit hash for the changes made in step 5 (e.g. `56220853b2d75c478dd1ee71ba7cd0e46363700f`)
+  * Download the tar.gz file at `https://github.com/bazelbuild/rules_java/archive/<commit hash>.tar.gz`
+  * Run `shasum -a 256 <file>`
+  * Update the following fields (note: add `strip_prefix`)
+    
+     Example:
+     ```starlark
+     "archive": "56220853b2d75c478dd1ee71ba7cd0e46363700f.tar.gz",
+     "sha256": "0f65c471b99c79e97dd18a3571d3707b4dbfc31ff8e9bf7083a09aae0adb7b5e",
+     "strip_prefix": "rules_java-56220853b2d75c478dd1ee71ba7cd0e46363700f",
+     "urls": ["https://github.com/meteorcloudy/rules_java/archive/56220853b2d75c478dd1ee71ba7cd0e46363700f.tar.gz"],
+     ```
 
 7. Trigger a new build on Downstream https://buildkite.com/bazel/bazel-at-head-plus-downstream. Set the message field to "java_tools release [version] [rc]", leave the commit field as "HEAD", and use `pull/[PRNUMBER]/head` for the branch. See [example](https://buildkite.com/bazel/bazel-at-head-plus-downstream/builds/2818). 
 
