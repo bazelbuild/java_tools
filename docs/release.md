@@ -80,7 +80,7 @@ more details about how the process works, see
      "archive": "56220853b2d75c478dd1ee71ba7cd0e46363700f.tar.gz",
      "sha256": "0f65c471b99c79e97dd18a3571d3707b4dbfc31ff8e9bf7083a09aae0adb7b5e",
      "strip_prefix": "rules_java-56220853b2d75c478dd1ee71ba7cd0e46363700f",
-     "urls": ["https://github.com/meteorcloudy/rules_java/archive/56220853b2d75c478dd1ee71ba7cd0e46363700f.tar.gz"],
+     "urls": ["https://github.com/bazelbuild/rules_java/archive/56220853b2d75c478dd1ee71ba7cd0e46363700f.tar.gz"],
      ```
 
 7. Trigger a new build on Downstream https://buildkite.com/bazel/bazel-at-head-plus-downstream. Set the message field to "java_tools release [version] [rc]", leave the commit field as "HEAD", and use `pull/[PRNUMBER]/head` for the branch. See [example](https://buildkite.com/bazel/bazel-at-head-plus-downstream/builds/2818). 
