@@ -66,22 +66,47 @@ more details about how the process works, see
      )     
      ```
      
-  * Repeat for `remote_java_tools_linux`, `remote_java_tools_windows`, `remote_java_tools_darwin_x86_64` and `remote_java_tools_darwin_arm64`    
+  * Repeat for `remote_java_tools_linux`, `remote_java_tools_windows`, `remote_java_tools_darwin_x86_64` and `remote_java_tools_darwin_arm64`
+  * Refer to [this example](https://github.com/bazelbuild/rules_java/commit/d1196d250c17dfffed52db13c75d4f9b9cd20617)
 
 6. Edit [distdir_deps.bzl](https://github.com/bazelbuild/bazel/blob/master/distdir_deps.bzl#L65) in the Bazel repository and create a new pull request. This PR will trigger the CI presubmit.
 
-  * Get the commit hash for the changes made in step 5 (e.g. `56220853b2d75c478dd1ee71ba7cd0e46363700f`)
-  * Download the tar.gz file at `https://github.com/bazelbuild/rules_java/archive/<commit hash>.tar.gz`
-  * Run `shasum -a 256 <file>`
-  * Update the following fields (note: add `strip_prefix`)
-    
-     Example:
-     ```starlark
-     "archive": "56220853b2d75c478dd1ee71ba7cd0e46363700f.tar.gz",
-     "sha256": "0f65c471b99c79e97dd18a3571d3707b4dbfc31ff8e9bf7083a09aae0adb7b5e",
-     "strip_prefix": "rules_java-56220853b2d75c478dd1ee71ba7cd0e46363700f",
-     "urls": ["https://github.com/bazelbuild/rules_java/archive/56220853b2d75c478dd1ee71ba7cd0e46363700f.tar.gz"],
-     ```
+  * Get the commit hash for the changes made in step 5 (e.g. `d1196d250c17dfffed52db13c75d4f9b9cd20617` for [this commit](https://github.com/bazelbuild/rules_java/commit/d1196d250c17dfffed52db13c75d4f9b9cd20617))
+     * Download the tar.gz file at `https://github.com/bazelbuild/rules_java/archive/<commit hash>.tar.gz`
+     * Run `shasum -a 256 <file>`
+     * Update the following fields (note: add `strip_prefix`)
+       
+        Example:
+        ```starlark
+        "archive": "d1196d250c17dfffed52db13c75d4f9b9cd20617.tar.gz",
+        "sha256": "0f65c471b99c79e97dd18a3571d3707b4dbfc31ff8e9bf7083a09aae0adb7b5e",
+        "strip_prefix": "rules_java-d1196d250c17dfffed52db13c75d4f9b9cd20617",
+        "urls": ["https://github.com/bazelbuild/rules_java/archive/d1196d250c17dfffed52db13c75d4f9b9cd20617.tar.gz"],
+        ```
+        
+     * Refer to [this PR](https://github.com/bazelbuild/bazel/pull/18902) (specifically [this commit](https://github.com/bazelbuild/bazel/pull/18902/commits/26ea92bfa57c2706c10c82714ff9a3094c6a39ad))
+  * Add archive_override to MODULE.bazel
+     * To calculate the `integrity` value of the source archive, do:
+   
+       ```bash
+       $ git clone https://github.com/bazelbuild/bazel-central-registry.git
+       $ cd bazel-central-registry
+       $ python3 ./tools/calc_integrity.py https://github.com/bazelbuild/rules_java/archive/d1196d250c17dfffed52db13c75d4f9b9cd20617.tar.gz
+       ```
+
+     * Add archive_override with the `integrity` and commit hash from above
+       
+        Example:
+        ```starlark
+        archive_override(
+            module_name = "rules_java",
+            urls = ["https://github.com/bazelbuild/rules_java/archive/d1196d250c17dfffed52db13c75d4f9b9cd20617.tar.gz"],
+            integrity = "sha256-4YvfBdBJhBvZNJh8nz0RRpdMI+CFuM4O8xRb3d1GinA=",
+            strip_prefix = "rules_java-d1196d250c17dfffed52db13c75d4f9b9cd20617",
+        )
+        ```
+        
+     * Refer to [this PR](https://github.com/bazelbuild/bazel/pull/18902) (specifically [this commit](https://github.com/bazelbuild/bazel/pull/18902/commits/642c32aa6e07d76654ac4210e7119e84e7bf2f82))
 
 7. Trigger a new build on Downstream https://buildkite.com/bazel/bazel-at-head-plus-downstream. Set the message field to "java_tools release [version] [rc]", leave the commit field as "HEAD", and use `pull/[PRNUMBER]/head` for the branch. See [example](https://buildkite.com/bazel/bazel-at-head-plus-downstream/builds/2818). 
 
@@ -166,14 +191,16 @@ more details about how the process works, see
                 -   Set as the latest release
                 -   Refer to [this example](https://github.com/bazelbuild/java_tools/releases/tag/java_v11.9)
              
-        - Return to the rules_java repository and create a PR to update [java_tools_repos()](https://github.com/bazelbuild/rules_java/blob/master/java/repositories.bzl#L22-L73) with the latest java_tools versions. After making sure presubmits pass, send the PR for review and assign `@hvadehra`.
+        - Return to the rules_java repository and create a PR to update [java_tools_repos()](https://github.com/bazelbuild/rules_java/blob/master/java/repositories.bzl#L22-L73) with the latest java_tools versions. After making sure presubmits pass, send the PR for review and assign `@hvadehra`. Refer to [this example](https://github.com/bazelbuild/rules_java/pull/119) (it also includes the 2 updates needed for the next step).
 
         - Follow the steps [here](https://github.com/bazelbuild/rules_java/tree/master/distro) to release a new version of rules_java. Reach out to `@hvadhera` to decide/confirm the version number bump.
+            -   In order for checks to pass in the next step, the release must be mirrored to the Bazel Central Registry. Make sure that a PR is opened and approved in the BCR repository ([example](https://github.com/bazelbuild/bazel-central-registry/pull/774))
+                 -   One time step: Add the `publish-to-bcr` app to your personal fork of `bazelbuild/bazel-central-registry`. Refer to the instructions [here](https://github.com/bazel-contrib/publish-to-bcr/blob/main/README.md).
       
-        - Update Bazel with the final rules_java version by editing the following files. After making sure presubmits pass, send the PR for review and assign `@hvadehra`.
-            -   https://github.com/bazelbuild/bazel/blob/master/distdir_deps.bzl#L65
-            -   https://github.com/bazelbuild/bazel/blob/master/src/MODULE.tools#L4
-            -   https://github.com/bazelbuild/bazel/blob/master/MODULE.bazel#L19
+        - Update Bazel with the final rules_java version by editing the following files. After making sure presubmits pass, send the PR for review and assign `@hvadehra`. Refer to [this PR](https://github.com/bazelbuild/bazel/pull/18902).
+            -   https://github.com/bazelbuild/bazel/blob/master/distdir_deps.bzl#L65 ([example](https://github.com/bazelbuild/bazel/pull/18902/commits/30aa092cfe50435ae370c4a4bc9938eff52ce3fb))
+            -   https://github.com/bazelbuild/bazel/blob/master/src/MODULE.tools#L4 ([example](https://github.com/bazelbuild/bazel/pull/18902/commits/73c8858d5195f072bbb316a3bf1289de1646d91a))
+            -   https://github.com/bazelbuild/bazel/blob/master/MODULE.bazel#L19 ([example](https://github.com/bazelbuild/bazel/pull/18902/commits/5b30bc4f23037f5651063e24c1881328720d6bcb)). Remove the archive_override() method as well.
 
     3. If the CI finishes unsuccessfully find the reasons why the CI is failing and file bugs. After the bugs are fixed start all over again from step 2 and create the next release candidate. This case is highly unlikely because Bazel already tests the `java_tools` built at head.
  
