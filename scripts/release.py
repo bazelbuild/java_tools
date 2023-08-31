@@ -16,39 +16,29 @@
 
 import argparse
 import wget
+import json
 
-def get_artifact_breakdown(input):
-  artifacts = {}
-  input = input.split("\n")
-  for artifact in input:
-    dict = {}
-    info = artifact.split()
-    dict["path"] = path = info[0]
-    dict["sha"] = info[1]
-    name = path[path.find("/java_"):path.find("-v")][1:]
-    artifacts[name] = dict
-  return artifacts
-
-def get_version(artifacts):
-  path = artifacts["java_tools"]["path"]
-  version = path[path.find("/v"):path.find("/java_")][1:]
-  return version
-
-def generate_release_info(item, version, path, sha):
+def generate_release_info(platform, version, path, sha):
   mirror_url = "https://mirror.bazel.build/bazel_java_tools/" + path
+  github_url = "https://github.com/bazelbuild/java_tools/releases/download/java_" + version + "/" + platform + "-" + version + ".zip"
   relnote = ("\n" + 
             "http_archive(\n"
-            "    name = \"remote_" + item + "\",\n" +
+            "    name = \"remote_" + platform + "\",\n" +
             "    sha = \"" + sha + "\",\n" +
             "    urls = [\n" +
-            "            \"" + mirror_url + "\",\n" + 
-            "            \"https://github.com/bazelbuild/java_tools/releases/download/java_" + version + "/" + item + "-" + version + ".zip\",\n"
+            "            \"" + mirror_url + "\",\n" +
+            "            \"" + github_url + "\",\n" +
             "    ],\n" +
             ")")    
   return relnote, mirror_url
 
 def download_file(mirror_url):
   wget.download(mirror_url , '.')
+
+def get_version(artifacts):
+  path = artifacts["java_tools"]["path"]
+  version = path[path.find("/v"):path.find("/java_")][1:]
+  return version
 
 def main():
   parser = argparse.ArgumentParser()
@@ -59,12 +49,14 @@ def main():
       help='Output from create_java_tools_release.sh')
   opts = parser.parse_args()
 
-  artifacts = get_artifact_breakdown(opts.artifacts)
+  artifacts = json.loads(opts.artifacts)
   version = get_version(artifacts)
 
   relnotes = "To use this java_tools release, add to your WORKSPACE file the definitions: \n```py"
-  for item in artifacts:
-    relnote, mirror_url = generate_release_info(item, version, artifacts[item]["path"], artifacts[item]["sha"])
+  for platform in artifacts:
+    path = artifacts[platform]["path"]
+    sha = artifacts[platform]["sha"]
+    relnote, mirror_url = generate_release_info(platform, version, path, sha)
     relnotes += relnote
     download_file(mirror_url)
 
