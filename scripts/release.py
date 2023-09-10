@@ -18,27 +18,19 @@ import argparse
 import wget
 import json
 
-def generate_release_info(platform, version, path, sha):
-  mirror_url = "https://mirror.bazel.build/bazel_java_tools/" + path
-  github_url = "https://github.com/bazelbuild/java_tools/releases/download/java_" + version + "/" + platform + "-" + version + ".zip"
-  relnote = ("\n" + 
+def generate_release_info(platform, artifacts):
+  return ("\n" + 
             "http_archive(\n"
             "    name = \"remote_" + platform + "\",\n" +
-            "    sha = \"" + sha + "\",\n" +
+            "    sha = \"" + artifacts["sha"] + "\",\n" +
             "    urls = [\n" +
-            "            \"" + mirror_url + "\",\n" +
-            "            \"" + github_url + "\",\n" +
+            "            \"" + artifacts["mirror_url"] + "\",\n" +
+            "            \"" + artifacts["github_url"] + "\",\n" +
             "    ],\n" +
             ")")    
-  return relnote, mirror_url
 
 def download_file(mirror_url):
   wget.download(mirror_url , '.')
-
-def get_version(artifacts):
-  path = artifacts["java_tools"]["path"]
-  version = path[path.find("/v"):path.find("/java_")][1:]
-  return version
 
 def main():
   parser = argparse.ArgumentParser()
@@ -49,16 +41,12 @@ def main():
       help='Output from create_java_tools_release.sh')
   opts = parser.parse_args()
 
-  artifacts = json.loads(opts.artifacts)
-  version = get_version(artifacts)
+  artifacts = json.loads(opts.artifacts)["artifacts"]
 
   relnotes = "To use this java_tools release, add to your WORKSPACE file the definitions: \n```py"
   for platform in artifacts:
-    path = artifacts[platform]["path"]
-    sha = artifacts[platform]["sha"]
-    relnote, mirror_url = generate_release_info(platform, version, path, sha)
-    relnotes += relnote
-    download_file(mirror_url)
+    relnotes += generate_release_info(platform, artifacts[platform])
+    download_file(artifacts[platform]["mirror_url"])
 
   relnotes += "```"
   with open('relnotes.txt', 'w') as f:
