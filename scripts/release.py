@@ -18,16 +18,21 @@ import argparse
 import wget
 import json
 
-def generate_release_info(platform, artifacts):
-  return ("\n" + 
-            "http_archive(\n"
-            "    name = \"remote_" + platform + "\",\n" +
-            "    sha = \"" + artifacts["sha"] + "\",\n" +
-            "    urls = [\n" +
-            "            \"" + artifacts["mirror_url"] + "\",\n" +
-            "            \"" + artifacts["github_url"] + "\",\n" +
-            "    ],\n" +
-            ")")    
+def generate_release_info(platform, artifacts):  
+  return '''
+  http_archive(
+      name = "remote_{platform}",
+      sha256 = "{sha}",
+      urls = [
+        "{mirror_url}",
+        "{github_url}"
+      ]
+  )'''.format(
+    platform = platform,
+    sha = artifacts["sha"],
+    mirror_url = artifacts["mirror_url"],
+    github_url = artifacts["github_url"]
+  )  
 
 def download_file(mirror_url):
   wget.download(mirror_url , '.')
