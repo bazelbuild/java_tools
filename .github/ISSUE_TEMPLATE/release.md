@@ -1,8 +1,8 @@
 ---
 name: 'Release tracker'
 about: Use this template to request for a new java_tools release
-title: 'Release: java_tools X.Y.Z'
-labels: ['release']
+title: 'Release: java_tools vX.Y.Z'
+labels: ['release','P1']
 assignees:
   - iancha1992
   - sgowroji
