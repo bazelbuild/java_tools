@@ -10,12 +10,12 @@
 
 4. Create a new release candidate by triggering a new build of the [java-tools-rc pipeline](https://buildkite.com/bazel-trusted/java-tools-rc). Set the message field to "java_tools release [version] [rc]", and leave the commit field as "HEAD" and branch as "master". Click on "release information" and enter the required details. See [example](https://buildkite.com/bazel-trusted/java-tools-rc/builds/1).
 
-```
-Version: 13.1
-RC: 1
-Commit hash: c7d8d1e3f16ac6db37b134358b6cfdb5e3c8f6b0
-Final release: false
-```
+     ```
+     Version: 13.1
+     RC: 1
+     Commit hash: c7d8d1e3f16ac6db37b134358b6cfdb5e3c8f6b0
+     Final release: false
+     ```
 
 5. Create a new branch in the [rules_java](https://github.com/bazelbuild/rules_java) repository and name it `java_v[version number]`, e.g. `java_v13.1`. Edit [java/repositories.bzl](https://github.com/bazelbuild/rules_java/blob/master/java/repositories.bzl) by copying the output from step 4 to `_JAVA_TOOLS_CONFIG`. Refer to [this example](https://github.com/bazelbuild/rules_java/commit/8b3d6fd2728610c71be2f6937783a396de139576).
 
@@ -55,19 +55,19 @@ Final release: false
   * Run `shasum -a 256 <file>`
   * Update the following fields: `archive`, `sha256`, `urls`, `strip_prefix` (to be added)
        
-   Example:
-   ```starlark
-   "archive": "8b3d6fd2728610c71be2f6937783a396de139576.tar.gz",
-   "sha256": "e8a6427d7882215b009c048f996499e89c9e43c13c56234da16a49b154c46546",
-   "strip_prefix": "rules_java-8b3d6fd2728610c71be2f6937783a396de139576",
-   "urls": ["https://github.com/bazelbuild/rules_java/archive/8b3d6fd2728610c71be2f6937783a396de139576.tar.gz"],`
-   ```
+        Example:
+        ```starlark
+        "archive": "8b3d6fd2728610c71be2f6937783a396de139576.tar.gz",
+        "sha256": "e8a6427d7882215b009c048f996499e89c9e43c13c56234da16a49b154c46546",
+        "strip_prefix": "rules_java-8b3d6fd2728610c71be2f6937783a396de139576",
+        "urls": ["https://github.com/bazelbuild/rules_java/archive/8b3d6fd2728610c71be2f6937783a396de139576.tar.gz"],`
+        ```
 
 7. Add archive_override to [MODULE.bazel](https://github.com/bazelbuild/bazel/blob/master/MODULE.bazel)
 
-     * To calculate the `integrity` value of the source archive, trigger the [BCR integrity pipeline](https://buildkite.com/bazel-trusted/bcr-integrity). Set the message field to "java_tools release [version] [rc]", and leave the commit field as "HEAD" and branch as "main". Click on "get archive" and enter the `<commit>.tar.gz` (e.g. `8b3d6fd2728610c71be2f6937783a396de139576.tar.gz`). The integrity value will be printed at the end of the "calculate integrity value" step. See [example](https://buildkite.com/bazel-trusted/bcr-integrity/builds/13).
+  * To calculate the `integrity` value of the source archive, trigger the [BCR integrity pipeline](https://buildkite.com/bazel-trusted/bcr-integrity). Set the message field to "java_tools release [version] [rc]", and leave the commit field as "HEAD" and branch as "main". Click on "get archive" and enter the `<commit>.tar.gz` (e.g. `8b3d6fd2728610c71be2f6937783a396de139576.tar.gz`). The integrity value will be printed at the end of the "calculate integrity value" step. See [example](https://buildkite.com/bazel-trusted/bcr-integrity/builds/13).
 
-     * Add archive_override with the `integrity` and commit hash from above.
+  * Add archive_override with the `integrity` and commit hash from above.
        
         Example:
         ```starlark
@@ -79,7 +79,7 @@ Final release: false
         )
         ```
         
-9. Trigger a new build on Downstream https://buildkite.com/bazel/bazel-at-head-plus-downstream. Set the message field to "java_tools release [version] [rc]", leave the commit field as "HEAD", and use `pull/[PRNUMBER]/head` for the branch. See [example](https://buildkite.com/bazel/bazel-at-head-plus-downstream/builds/2818).
+8. Trigger a new build on Downstream https://buildkite.com/bazel/bazel-at-head-plus-downstream. Set the message field to "java_tools release [version] [rc]", leave the commit field as "HEAD", and use `pull/[PRNUMBER]/head` for the branch. See [example](https://buildkite.com/bazel/bazel-at-head-plus-downstream/builds/2818).
 
 Check the results of the build to confirm that there are no new failures (i.e. all failures also appear at HEAD). To do this, compare the results to the latest run [here](https://buildkite.com/bazel/bazel-at-head-plus-downstream/builds?branch=master). If the CI finishes unsuccessfully, find the reasons why the CI is failing and file bugs. After the bugs are fixed, start all over again from step 2 and create the next release candidate. This case is highly unlikely because Bazel already tests the `java_tools` built at head.
 
@@ -87,12 +87,12 @@ If the CI finishes successfully:
 
 9. Create the release artifacts from the release candidate by triggering a new build of the [java-tools-rc pipeline](https://buildkite.com/bazel-trusted/java-tools-rc). Set the message field to "java_tools release [version] [rc]", and leave the commit field as "HEAD" and branch as "master". Click on "release information" and enter the required details.
 
-```
-Version: 13.1
-RC: 1
-Commit hash: c7d8d1e3f16ac6db37b134358b6cfdb5e3c8f6b0
-Final release: true
-```  
+     ```
+     Version: 13.1
+     RC: 1
+     Commit hash: c7d8d1e3f16ac6db37b134358b6cfdb5e3c8f6b0
+     Final release: true
+     ```  
        
 10. Create a [java_tools release](https://github.com/bazelbuild/java_tools/releases) on GitHub by triggering the [java-tools-release pipeline](https://buildkite.com/bazel-trusted/java-tools-release). Set the message field to "java_tools release [version] [rc]", and leave the commit field as "HEAD" and branch as "master". Click on "artifacts information" and paste the output from the step above. See [example](https://buildkite.com/bazel-trusted/java-tools-release/builds/2).
                          
@@ -101,7 +101,8 @@ Final release: true
 12. Follow the steps [here](https://github.com/bazelbuild/rules_java/tree/master/distro) to release a new version of rules_java.
       
 13. Update Bazel with the final rules_java version by editing the following files. After making sure presubmits pass, send the PR for review and assign `@hvadehra`. Refer to [this PR](https://github.com/bazelbuild/bazel/pull/18902).
-            -   https://github.com/bazelbuild/bazel/blob/master/distdir_deps.bzl#L65 ([example](https://github.com/bazelbuild/bazel/pull/18902/commits/30aa092cfe50435ae370c4a4bc9938eff52ce3fb))
-            -   https://github.com/bazelbuild/bazel/blob/master/src/MODULE.tools#L4 ([example](https://github.com/bazelbuild/bazel/pull/18902/commits/73c8858d5195f072bbb316a3bf1289de1646d91a))
-            -   https://github.com/bazelbuild/bazel/blob/master/MODULE.bazel#L19 ([example](https://github.com/bazelbuild/bazel/pull/18902/commits/5b30bc4f23037f5651063e24c1881328720d6bcb)). Remove the archive_override() method as well.
+    
+     -   https://github.com/bazelbuild/bazel/blob/master/distdir_deps.bzl#L65 ([example](https://github.com/bazelbuild/bazel/pull/18902/commits/30aa092cfe50435ae370c4a4bc9938eff52ce3fb))
+     -   https://github.com/bazelbuild/bazel/blob/master/src/MODULE.tools#L4 ([example](https://github.com/bazelbuild/bazel/pull/18902/commits/73c8858d5195f072bbb316a3bf1289de1646d91a))
+     -   https://github.com/bazelbuild/bazel/blob/master/MODULE.bazel#L19 ([example](https://github.com/bazelbuild/bazel/pull/18902/commits/5b30bc4f23037f5651063e24c1881328720d6bcb)). Remove the archive_override() method as well.
  
