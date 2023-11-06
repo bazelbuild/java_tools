@@ -53,7 +53,7 @@ def main():
     relnotes += generate_release_info(platform, artifacts[platform])
     download_file(artifacts[platform]["mirror_url"])
 
-  relnotes += "```"
+  relnotes += "\n```"
   with open('relnotes.txt', 'w') as f:
     f.write(relnotes)
 
