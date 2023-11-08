@@ -69,7 +69,7 @@ more details about how the process works, see
   * Repeat for `remote_java_tools_linux`, `remote_java_tools_windows`, `remote_java_tools_darwin_x86_64` and `remote_java_tools_darwin_arm64`
   * Refer to [this example](https://github.com/bazelbuild/rules_java/commit/d1196d250c17dfffed52db13c75d4f9b9cd20617)
 
-6. Edit [distdir_deps.bzl](https://github.com/bazelbuild/bazel/blob/master/distdir_deps.bzl#L65) in the Bazel repository and create a new pull request. This PR will trigger the CI presubmit.
+6. Edit [workspace_deps.bzl](https://github.com/bazelbuild/bazel/blob/master/workspace_deps.bzl) in the Bazel repository and create a new pull request. This PR will trigger the CI presubmit.
 
   * Get the commit hash for the changes made in step 5 (e.g. `d1196d250c17dfffed52db13c75d4f9b9cd20617` for [this commit](https://github.com/bazelbuild/rules_java/commit/d1196d250c17dfffed52db13c75d4f9b9cd20617))
      * Download the tar.gz file at `https://github.com/bazelbuild/rules_java/archive/<commit hash>.tar.gz`
@@ -198,9 +198,9 @@ more details about how the process works, see
                  -   One time step: Add the `publish-to-bcr` app to your personal fork of `bazelbuild/bazel-central-registry`. Refer to the instructions [here](https://github.com/bazel-contrib/publish-to-bcr/blob/main/README.md).
       
         - Update Bazel with the final rules_java version by editing the following files. After making sure presubmits pass, send the PR for review and assign `@hvadehra`. Refer to [this PR](https://github.com/bazelbuild/bazel/pull/18902).
-            -   https://github.com/bazelbuild/bazel/blob/master/distdir_deps.bzl#L65 ([example](https://github.com/bazelbuild/bazel/pull/18902/commits/30aa092cfe50435ae370c4a4bc9938eff52ce3fb))
-            -   https://github.com/bazelbuild/bazel/blob/master/src/MODULE.tools#L4 ([example](https://github.com/bazelbuild/bazel/pull/18902/commits/73c8858d5195f072bbb316a3bf1289de1646d91a))
-            -   https://github.com/bazelbuild/bazel/blob/master/MODULE.bazel#L19 ([example](https://github.com/bazelbuild/bazel/pull/18902/commits/5b30bc4f23037f5651063e24c1881328720d6bcb)). Remove the archive_override() method as well.
+            -   https://github.com/bazelbuild/bazel/blob/master/workspace_deps.bzl ([example](https://github.com/bazelbuild/bazel/commit/ef5648ef4e0a48291c8bd5ff02a96ef03d69cf04))
+            -   https://github.com/bazelbuild/bazel/blob/master/src/MODULE.tools ([example](https://github.com/bazelbuild/bazel/pull/18902/commits/73c8858d5195f072bbb316a3bf1289de1646d91a))
+            -   https://github.com/bazelbuild/bazel/blob/master/MODULE.bazel# ([example](https://github.com/bazelbuild/bazel/pull/18902/commits/5b30bc4f23037f5651063e24c1881328720d6bcb)). Remove the archive_override() method as well.
 
     3. If the CI finishes unsuccessfully find the reasons why the CI is failing and file bugs. After the bugs are fixed start all over again from step 2 and create the next release candidate. This case is highly unlikely because Bazel already tests the `java_tools` built at head.
  
