@@ -48,7 +48,7 @@
       } 
      ```
 
-6. Update [distdir_deps.bzl](https://github.com/bazelbuild/bazel/blob/master/distdir_deps.bzl) in the Bazel repository and create a new draft pull request to trigger the CI presubmit. Refer to [this PR](https://github.com/bazelbuild/bazel/pull/20045) (specifically [this commit](https://github.com/bazelbuild/bazel/pull/20045/commits/b0ec360581ee665faf2298641ef4bb6feee12f9d))
+6. Update [workspace_deps.bzl](https://github.com/bazelbuild/bazel/blob/master/workspace_deps.bzl) in the Bazel repository and create a new draft pull request to trigger the CI presubmit. Refer to [this PR](https://github.com/bazelbuild/bazel/pull/20045) (specifically [this commit](https://github.com/bazelbuild/bazel/pull/20045/commits/b0ec360581ee665faf2298641ef4bb6feee12f9d))
 
   * Get the commit hash for the changes made in step 5 (e.g. `8b3d6fd2728610c71be2f6937783a396de139576` for [this commit](https://github.com/bazelbuild/rules_java/commit/8b3d6fd2728610c71be2f6937783a396de139576))
   * Download the tar.gz file at `https://github.com/bazelbuild/rules_java/archive/<commit hash>.tar.gz`
@@ -102,7 +102,7 @@ If the CI finishes successfully:
       
 13. Update Bazel with the final rules_java version by editing the following files. After making sure presubmits pass, send the PR for review and assign `@hvadehra`. Refer to [this PR](https://github.com/bazelbuild/bazel/pull/18902).
     
-     -   https://github.com/bazelbuild/bazel/blob/master/distdir_deps.bzl#L65 ([example](https://github.com/bazelbuild/bazel/pull/18902/commits/30aa092cfe50435ae370c4a4bc9938eff52ce3fb))
-     -   https://github.com/bazelbuild/bazel/blob/master/src/MODULE.tools#L4 ([example](https://github.com/bazelbuild/bazel/pull/18902/commits/73c8858d5195f072bbb316a3bf1289de1646d91a))
-     -   https://github.com/bazelbuild/bazel/blob/master/MODULE.bazel#L19 ([example](https://github.com/bazelbuild/bazel/pull/18902/commits/5b30bc4f23037f5651063e24c1881328720d6bcb)). Remove the archive_override() method as well.
+     -   https://github.com/bazelbuild/bazel/blob/master/workspace_deps.bzl ([example](https://github.com/bazelbuild/bazel/commit/ef5648ef4e0a48291c8bd5ff02a96ef03d69cf04))
+     -   https://github.com/bazelbuild/bazel/blob/master/src/MODULE.tools ([example](https://github.com/bazelbuild/bazel/pull/18902/commits/73c8858d5195f072bbb316a3bf1289de1646d91a))
+     -   https://github.com/bazelbuild/bazel/blob/master/MODULE.bazel ([example](https://github.com/bazelbuild/bazel/pull/18902/commits/5b30bc4f23037f5651063e24c1881328720d6bcb)). Remove the archive_override() method as well.
  
