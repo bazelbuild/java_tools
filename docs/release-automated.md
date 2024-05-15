@@ -66,6 +66,7 @@
 7. Add archive_override to [MODULE.bazel](https://github.com/bazelbuild/bazel/blob/master/MODULE.bazel)
 
   * To calculate the `integrity` value of the source archive, trigger the [BCR integrity pipeline](https://buildkite.com/bazel-trusted/bcr-integrity). Set the message field to "java_tools release [version] [rc]", and leave the commit field as "HEAD" and branch as "main". Click on "get archive" and enter the `<commit>.tar.gz` (e.g. `8b3d6fd2728610c71be2f6937783a396de139576.tar.gz`). The integrity value will be printed at the end of the "calculate integrity value" step. See [example](https://buildkite.com/bazel-trusted/bcr-integrity/builds/13).
+       * Alternately, run `cat <commit>.tar.gz | openssl dgst -sha256 -binary | base64`.
 
   * Add archive_override with the `integrity` and commit hash from above.
        
