@@ -46,14 +46,15 @@ def main():
       help='Output from create_java_tools_release.sh')
   opts = parser.parse_args()
 
-  artifacts = json.loads(opts.artifacts)["artifacts"]
+  release_info = json.loads(opts.artifacts)
+  artifacts = release_info["artifacts"]
 
   relnotes = "To use this java_tools release, add to your WORKSPACE file the definitions: \n```py"
   for platform in artifacts:
     relnotes += generate_release_info(platform, artifacts[platform])
     download_file(artifacts[platform]["mirror_url"])
 
-  relnotes += "\n```"
+  relnotes += "\n```\nThis Java tools version was built from http://github.com/bazelbuild/bazel/commit/" + release_info["source_revision"]
   with open('relnotes.txt', 'w') as f:
     f.write(relnotes)
 
