@@ -15,8 +15,9 @@
 """Script to get release notes + zip files to release java_tools."""
 
 import argparse
-import wget
 import json
+import os
+from urllib.request import urlretrieve
 
 def generate_release_info(platform, artifacts):  
   return '''
@@ -35,7 +36,7 @@ def generate_release_info(platform, artifacts):
   )  
 
 def download_file(mirror_url):
-  wget.download(mirror_url , '.')
+  urlretrieve(mirror_url , './' + os.path.basename(mirror_url))
 
 def main():
   parser = argparse.ArgumentParser()
